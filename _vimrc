@@ -36,6 +36,7 @@ endfunction
 
 " Jackie CAI custimized options
 set number      " show line number
+set noautochdir " do not change directory when open files, buffers
 set nobackup
 set noswapfile
 set nowrap      " do not wrap long lines
@@ -60,9 +61,12 @@ let $PATH=$PATH.';'.cscopepath
 
 " key mappings
 let mapleader=" "
-nmap <C-tab> :bn<CR>
-nmap <leader>e :e $MYVIMRC<CR>
-nmap <silent> <leader>cmd :!start cmd /k cd %:p:h<cr>  " open a CMD under the current directory
+"nmap <C-tab>               :bn <CR>
+nmap <leader>e             :e $MYVIMRC <CR>
+nmap <silent> <leader>cmd  :!start cmd /k cd %:p:h<cr>  " open a CMD under the current directory
+nmap <leader>h             :nohlsearch<CR>              " clear highlights after search
+"nmap <F7>                  :cscope find s
+
 
 if has("gui_running")
     colorscheme Tomorrow-Night
@@ -82,3 +86,16 @@ if has("gui_running")
 endif
 
 " plugins
+"
+" Netrw
+"let g:netrw_liststyle=3  " View type is Tree
+"nmap <F10> :Lexplore <cr> 
+
+" Ctags
+set tags=./tags;,tags;         " look for "tags" file in the current directory and working directory then upward until "/"; 
+
+" Tagbar
+let g:tagbar_left=1            " tagbar windown locates on the left
+let g:tagbar_autofocus=1       " cursor will move to tagbar window when it's opened
+let g:tagbar_autoclose=1       " close tagbar automatically when selected one tag
+nmap <F8> :TagbarToggle <cr> 

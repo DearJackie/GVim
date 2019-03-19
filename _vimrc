@@ -194,34 +194,11 @@ set nofoldenable        " no fold when open a file
 set foldlevel=10        " 
 set cursorline
 
+" foldmethod for vim file is marker
+autocmd FileType vim setlocal foldmethod=marker
 
-" set third party programs path into PATH
-let thirdpartypath=$VIM.'\'.'thirdparty'
-let $PATH=$PATH.';'.thirdpartypath
-let ctagspath=thirdpartypath.'\'.'ctags'
-let $PATH=$PATH.';'.ctagspath
-let cscopepath=thirdpartypath.'\'.'cscope'
-let $PATH=$PATH.';'.cscopepath
-
-" key mappings
-let mapleader=" "          " space as the map leader
-"nmap <C-tab>               :bn <CR>
-nmap <leader>e             :e $MYVIMRC <CR>
-nmap <silent> <leader>cmd  :!start cmd /k cd %:p:h<cr>  " open a CMD under the current directory
-nmap <silent> <leader>git  :!start "c:\Program Files\Git\git-bash.exe" <cr>  " open a git shell under the current directory
-nmap <leader>h             :nohlsearch<CR>              " clear highlights after search
-"nmap <F7>                  :cscope find s
-
-" Don't use Ex mode, use Q for formatting.
-" Revert with ":unmap Q".
-"map Q gq
-
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
-" Revert with ":iunmap <C-U>".
-inoremap <C-U> <C-G>u<C-U>
-
-"colorscheme jackie 
+" open all folds when open a file
+"autocmd BufRead * normal zR
 
 if has("gui_running")
     colorscheme tomorrow-night
@@ -239,21 +216,70 @@ if has("gui_running")
     endif
 endif
 
-" plugins
-"
+" set third party programs path into PATH
+let thirdpartypath=$VIM.'\'.'thirdparty'
+let $PATH=$PATH.';'.thirdpartypath
+let ctagspath=thirdpartypath.'\'.'ctags'
+let $PATH=$PATH.';'.ctagspath
+let cscopepath=thirdpartypath.'\'.'cscope'
+let $PATH=$PATH.';'.cscopepath
+
+" key mappings
+let mapleader=" "          " space as the map leader
+"nmap <C-tab>               :bn <CR>
+nmap <leader>e             :e $MYVIMRC <CR>
+nmap <silent> <leader>cmd  :!start cmd /k cd %:p:h<cr>  " open a CMD under the current directory
+nmap <silent> <leader>git  :!start "c:\Program Files\Git\git-bash.exe" <cr>  " open a git shell under the current directory
+nmap <leader>h             :nohlsearch<CR>              " clear highlights after search
+
+" move cursor in INSERT mode: alt + direction key
+inoremap <M-j> <Down>
+inoremap <M-k> <Up>
+inoremap <M-h> <left>
+inoremap <M-l> <Right>
+
+" Don't use Ex mode, use Q for formatting.
+" Revert with ":unmap Q".
+"map Q gq
+
+" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" so that you can undo CTRL-U after inserting a line break.
+" Revert with ":iunmap <C-U>".
+inoremap <C-U> <C-G>u<C-U>
+
+" Plugins {{{
+" ------Netrw ------- {{{
 " Netrw
 "let g:netrw_liststyle=3  " View type is Tree
 "nmap <F10> :Lexplore <cr> 
+" }}} end of Netrw
 
-" Ctags
+" ------Ctags ------- {{{
 set tags=./tags;,tags;         " look for "tags" file in the current directory and working directory then upward until "/"(root directory); 
-"autocmd BufWritePost !start cmd /k ctags -R -o newtags .        " update ctags file in the background once the source code is modified
+"autocmd BufWritePost !start cmd /k create_ctags.bat getcwd()        " update ctags file in the background once the source code is modified
+nmap <leader>ctags :!start cmd /k create_ctags.bat getcwd()        " update ctags file in the background once the source code is modified
+" }}} end of Ctags
 
-" Cscope
-"set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
+" ------Cscope ------- {{{
+set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
+set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
+"autocmd BufWritePost !start cmd /k create_cscopetags.bat getcwd()       " update cscope tags file in the background once the source code is modified
+nmap <leader>cs :!start cmd /k create_cscopetags.bat getcwd()        " update ctags file in the background once the source code is modified
+nmap <leader>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
+nmap <leader>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
+nmap <leader>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
+nmap <leader>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
+nmap <leader>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
+nmap <leader>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+nmap <leader>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nmap <leader>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+" }}} end of Cscope
 
-" Tagbar
+" ------Tagbar ------- {{{
 let g:tagbar_left=1            " tagbar windown locates on the left
 let g:tagbar_autofocus=1       " cursor will move to tagbar window when it's opened
 let g:tagbar_autoclose=1       " close tagbar automatically when selected one tag
 nmap <F8> :TagbarToggle <cr> 
+" }}}  end of Tagbar
+" }}}  end of Plugins
+

@@ -1,11 +1,13 @@
 
 :: The first parameter passed to the batch file(%1) is the project root directory
 :: Enter into project root directory before starting the command
-CD %1
+ECHO %CD%
+PAUSE
+:: CD %1
 
 :: Create cscope.files
-SET IN_DIR=%1
-SET OUT_DIR=%1
+SET IN_DIR=%CD%
+SET OUT_DIR=%CD%
 find  $IN_DIR                                                                   \
 	-path "$IN_DIR/arch/*" ! -path "$IN_DIR/arch/i386*" -prune -o               \
 	-path "$IN_DIR/include/asm-*" ! -path "$IN_DIR/include/asm-i386*" -prune -o \
@@ -20,5 +22,5 @@ find  $IN_DIR                                                                   
 cscope.exe -b -q -k
 
 :: Repace the tag file with the new tag file
-::DEL tags
-::RENAME tags.new tags
+:: DEL tags
+:: RENAME tags.new tags

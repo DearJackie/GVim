@@ -41,6 +41,8 @@ make ARCH=x86 cscope tags
 ctrl-o: cursor position back
 ctrl-i: cursor position forward
 ctrl-g: print the current file name with full path(:file) 
+:ts[elect] {tagname} for tag list( "g]" )
+:sts[elect] {tagname} for tag list in a split window ( open the file for the tag in a split window )
 
 11. copy the current the file and rename: ":file {name}"
 
@@ -60,8 +62,7 @@ To build the database, follow the steps:
    -i namefile: browse through files listed in "namefile" instead of "cscope.files"
    -d: Don't update the cross-references
 3). Add the database connection to Vim: ":cs add cscope.out", check the connection status using: ":cs show"
-4). Once a scope connection is established, make queries to cscope in Vim: ":cs find <type> <symbol>". This can
-   be mapped to shortcut keys("cscope_maps.vim" does this).
+4). Once a scope connection is established, make queries to cscope in Vim: ":cs find <type> <symbol>".
 5). " Ctrl - T " to go back to previous one.
 
 
@@ -73,3 +74,13 @@ b) To replace, in EX mode: [range]s/search/replace/[gc]:
 	c: optional, confirmation needed for replacement
 	:%s/search/replace/: search the whole file
 	enter VISUAL mode and type the command, to search in the selected range, note that DON'T delete the existing characters in EX line which indicating the ranges
+
+14. Restore last opened file when open Vim:
+a) when leaving VIM, ":mksession!", save(overwrite the file exists) Session.vim in the current directory. 
+   Shortcut: "command! Q mksession! ~/Session.vim | qall" ( use :Q to save sessions )
+b) when opening VIM, "vim -S /path/to/Session.vim" to restore. 
+
+15. Comment mulitple lines:
+a) Ctrl-V to enter VISUAL BLOCK mode and select several lines, Shift-i to INSERT mode, type the "//" and then ESC
+b) :1,10s/^/#/ => comment line 1 to 10
+

@@ -285,13 +285,18 @@ if has("gui_running")
     endif
 endif
 
-" set third party programs path into PATH
+" set third party programs path into PATH before Windows dir, in case GNU
+" win32 has the same program as Windows, it will take in advance
 let thirdpartypath=$VIM.'\'.'thirdparty'
-let $PATH=$PATH.';'.thirdpartypath
+let $PATH=thirdpartypath.';'.$PATH
+"let unixpath=thirdpartypath.'\'.'unix'
+"let $path=unixpath.';'.$path
+let gnuwin32path=thirdpartypath.'\'.'gnuwin32'
+let $path=gnuwin32path.';'.$path
 let ctagspath=thirdpartypath.'\'.'ctags'
-let $PATH=$PATH.';'.ctagspath
+let $PATH=ctagspath.';'.$PATH
 let cscopepath=thirdpartypath.'\'.'cscope'
-let $PATH=$PATH.';'.cscopepath
+let $PATH=cscopepath.';'.$PATH
 
 " key mappings
 let mapleader=" "          " space as the map leader
@@ -321,8 +326,19 @@ inoremap <C-U> <C-G>u<C-U>
 " ------Netrw ------- {{{
 " Netrw
 "let g:netrw_liststyle=3  " View type is Tree
+"autocmd FileType netrw setl bufhidden=delete "wipe
 "nmap <F10> :Lexplore <cr> 
 " }}} end of Netrw
+
+" ------NERDTree ------- {{{
+"let g:netrw_liststyle=3  " View type is Tree
+"let NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
+"let NERDTreeMinimalUI = 1
+"let NERDTreeDirArrows = 1
+"autocmd FileType netrw setl bufhidden=delete "wipe
+nmap <F10> :NERDTreeToggle <cr> 
+" }}} end of NERDTree 
+
 
 " ------Ctags ------- {{{
 set tags=./tags;,tags;         " look for "tags" file in the current directory and working directory then upward until "/"(root directory); 
@@ -339,7 +355,7 @@ set csto=0      " check cscope for definition of a symbol before checking ctags:
 " Be sure to set the current working directory(:cd xxx) to the root of the source code project before the operation
 "autocmd BufWritePost !start cmd /k create_cscopetags.bat     " update cscope tags file in the background once the source code is modified
 nmap <leader>css :!start cmd /k create_cscopetags.bat <CR>    " update cscope tags file mannually
-nmap <leader>csa :cs add cscope.out                           " Add the cscope database
+nmap <leader>csa :cs add cscope.out <CR>                      " Add the cscope database
 nmap <leader>cfa :cs find a <C-R>=expand("<cword>")<CR><CR>	  " Find assignments to symbol under cursor *
 nmap <leader>cfc :cs find c <C-R>=expand("<cword>")<CR><CR>	  " Find functions calling function under cursor *
 nmap <leader>cfd :cs find d <C-R>=expand("<cword>")<CR><CR>   " Find functions called by function under cursor

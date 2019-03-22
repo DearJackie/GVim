@@ -306,6 +306,7 @@ nmap <silent> <leader>cmd  :!start cmd /k cd %:p:h<cr>  " open a CMD under the c
 nmap <silent> <leader>git  :!start "c:\Program Files\Git\git-bash.exe" <cr>  " open a git shell under the current directory
 nmap <leader>h             :nohlsearch<CR>  " clear highlights after search
 nmap <leader>cd            :cd %:p:h<CR>    " change to the directory of the currently open file (this sets the current directory for all windows in Vim, only for current windows, use "lcd")
+nmap <leader>bd            :bd <CR>         " close the current buffer
 
 " move cursor in INSERT mode: alt + direction key
 "inoremap <M-j> <Down>
@@ -331,14 +332,29 @@ inoremap <C-U> <C-G>u<C-U>
 " }}} end of Netrw
 
 " ------NERDTree ------- {{{
-"let g:netrw_liststyle=3  " View type is Tree
-"let NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
-"let NERDTreeMinimalUI = 1
-"let NERDTreeDirArrows = 1
-"autocmd FileType netrw setl bufhidden=delete "wipe
-nmap <F10> :NERDTreeToggle <cr> 
-" }}} end of NERDTree 
+let NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
+map <leader>o :NERDTreeFind <cr>   " View the current buffer in NERDTree
+nmap <F10>    :NERDTreeToggle <cr> 
 
+" Check if NERDTree is open or active
+"function! s:IsNERDTreeOpen()        
+"  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+"endfunction
+"
+"" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+"" file, and we're not in vimdiff
+"function! s:SyncTree()
+"  if &modifiable && s:IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+"    NERDTreeFind
+"   " wincmd p   " switch cursor back to previous window
+"  wincmd l   " assume the NERDTree is on the left side by default
+"  endif
+"endfunction
+
+" Highlight currently open buffer in NERDTree
+"autocmd BufEnter * call s:SyncTree()
+
+" }}} end of NERDTree 
 
 " ------Ctags ------- {{{
 set tags=./tags;,tags;         " look for "tags" file in the current directory and working directory then upward until "/"(root directory); 
@@ -358,7 +374,7 @@ nmap <leader>css :!start cmd /k create_cscopetags.bat <CR>    " update cscope ta
 nmap <leader>csa :cs add cscope.out <CR>                      " Add the cscope database
 nmap <leader>cfa :cs find a <C-R>=expand("<cword>")<CR><CR>	  " Find assignments to symbol under cursor *
 nmap <leader>cfc :cs find c <C-R>=expand("<cword>")<CR><CR>	  " Find functions calling function under cursor *
-nmap <leader>cfd :cs find d <C-R>=expand("<cword>")<CR><CR>   " Find functions called by function under cursor
+nmap <leader>cfd :cs find d <C-R>=expand("<cword>")<CR><CR>   " Find functions called by function under cursor *
 nmap <leader>cfe :cs find e <C-R>=expand("<cword>")<CR><CR>	  " Find egrep pattern under cursor
 nmap <leader>cff :cs find f <C-R>=expand("<cfile>")<CR><CR>	  " Find this file *
 nmap <leader>cfg :cs find g <C-R>=expand("<cword>")<CR><CR>	  " Find defintion under cursor *
@@ -373,5 +389,13 @@ let g:tagbar_autofocus=1       " cursor will move to tagbar window when it's ope
 let g:tagbar_autoclose=1       " close tagbar automatically when selected one tag
 nmap <F8> :TagbarToggle <cr> 
 " }}}  end of Tagbar
+"
+" ------gitgutter ------- {{{
+" The delay is governed by vim's updatetime option; the default value is 4000, i.e. 4 seconds, but I suggest reducing it to around 100ms
+set updatetime=100
+" define key mapping to show all changes in the buffer
+nmap <C-F10> :GitGutterFold <cr>
+" }}}
+"
 " }}}  end of Plugins
 

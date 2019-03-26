@@ -299,11 +299,12 @@ let cscopepath=thirdpartypath.'\'.'cscope'
 let $PATH=cscopepath.';'.$PATH
 
 " key mappings
-let mapleader=" "          " space as the map leader
+let mapleader=" "          " one space as the map leader
 "nmap <C-tab>               :bn <CR>
 nmap <leader>e             :e $MYVIMRC <CR>
 nmap <silent> <leader>cmd  :!start cmd /k cd %:p:h<cr>  " open a CMD under the current directory
 nmap <silent> <leader>git  :!start "c:\Program Files\Git\git-bash.exe" <cr>  " open a git shell under the current directory
+nmap <leader>gitext        :!start "c:\Work\Tools\GitExtensions\GitExtensions.exe" <CR>  " open git extension gui
 nmap <leader>h             :nohlsearch<CR>  " clear highlights after search
 nmap <leader>cd            :cd %:p:h<CR>    " change to the directory of the currently open file (this sets the current directory for all windows in Vim, only for current windows, use "lcd")
 nmap <leader>bd            :bd <CR>         " close the current buffer

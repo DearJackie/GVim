@@ -1,4 +1,7 @@
 
+[2019/03/26]
+Initial release for GVim in windows, create a git branch for the release.
+
 [2019/03/09]
 1. Change git user name and email
 

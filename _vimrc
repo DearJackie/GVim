@@ -306,8 +306,10 @@ nmap <silent> <leader>cmd  :!start cmd /k cd %:p:h<cr>  " open a CMD under the c
 nmap <silent> <leader>git  :!start "c:\Program Files\Git\git-bash.exe" <cr>  " open a git shell under the current directory
 nmap <leader>gitext        :!start "c:\Work\Tools\GitExtensions\GitExtensions.exe" <CR>  " open git extension gui
 nmap <leader>h             :nohlsearch<CR>  " clear highlights after search
-nmap <leader>cd            :cd %:p:h<CR>    " change to the directory of the currently open file (this sets the current directory for all windows in Vim, only for current windows, use "lcd")
-nmap <leader>bd            :bd <CR>         " close the current buffer
+nmap <leader>cd            :cd %:p:h<CR>    " change to the directory of the currently open file for all windows
+nmap <leader>lcd           :lcd %:p:h<CR>   " change to the directory of the currently open file for the current window
+nmap <leader>bd            :bd <CR>         " close the current buffer, buffer is put into unlisted list
+nmap <leader>bw            :bw <CR>         " close the current buffer, buffer is swiped
 
 " move cursor in INSERT mode: alt + direction key
 "inoremap <M-j> <Down>
@@ -360,18 +362,32 @@ nmap <F10>    :NERDTreeToggle <cr>
 " ------Ctags ------- {{{
 set tags=./tags;,tags;         " look for "tags" file in the current directory and working directory then upward until "/"(root directory); 
 
+function! CreateCtags()
+    silent !clear
+	let s:cwd = getcwd()
+	" pass the current working directory as the argument to the batch file
+    execute "!start cmd /k create_ctags.bat " . s:cwd 
+endfunction
+
 " Be sure to set the current working directory(:cd xxx) to the root of the source code project before the operation
 "autocmd BufWritePost !start cmd /k create_ctags.bat        " update ctags file in the background once the source code is modified
-nmap <leader>ctags :!start cmd /k create_ctags.bat <CR>     " Create ctags file in the background mannually
+noremap <leader>ctags :call CreateCtags()<CR>  " Create ctags file in the background mannually
 " }}} end of Ctags
 
 " ------Cscope ------- {{{
 set cscopetag   " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t' and search cscope tag first
 set csto=0      " check cscope for definition of a symbol before checking ctags: set to 1, if you want the reverse search order.
 
+function! CreateCscopeTags()
+    silent !clear
+	let s:cwd = getcwd()
+	" pass the current working directory as the argument to the batch file
+    execute "!start cmd /k create_cscopetags.bat " . s:cwd 
+endfunction
+
 " Be sure to set the current working directory(:cd xxx) to the root of the source code project before the operation
 "autocmd BufWritePost !start cmd /k create_cscopetags.bat     " update cscope tags file in the background once the source code is modified
-nmap <leader>css :!start cmd /k create_cscopetags.bat <CR>    " update cscope tags file mannually
+nmap <leader>css :call CreateCscopeTags()<CR>                 " update cscope tags file mannually
 nmap <leader>csa :cs add cscope.out <CR>                      " Add the cscope database
 nmap <leader>cfa :cs find a <C-R>=expand("<cword>")<CR><CR>	  " Find assignments to symbol under cursor *
 nmap <leader>cfc :cs find c <C-R>=expand("<cword>")<CR><CR>	  " Find functions calling function under cursor *

@@ -2,13 +2,24 @@
 @ECHO OFF
 :: The first parameter passed to the batch file(%1) is the project root directory
 :: Enter into project root directory before starting the command
-::ECHO %CD%
-::PAUSE
-:: CD %1
+SET CCWD=%1
+@ECHO Enter into project root directory:  %CCWD%
+CD %CCWD%
 
-:: Create cscope.files
-::SET IN_DIR=%CD%
-::SET OUT_DIR=%CD%
+@ECHO Creating "cscope.files" ...
+SET INPUTFILE=cscope.files
+IF EXIST %INPUTFILE% (
+     ECHO deleting the existing file: "%INPUTFILE%"
+     DEL %INPUTFILE%
+)
+
+@ECHO OFF
+FOR /R %%i IN (*.c *.h *.s *.asm) DO (
+	ECHO %%i>>%INPUTFILE%
+)
+
+::SET IN_DIR=%CCWD%
+::SET OUT_DIR=%CCWD%
 ::find  $IN_DIR                                                                   \
 ::	-path "$IN_DIR/arch/*" ! -path "$IN_DIR/arch/i386*" -prune -o               \
 ::	-path "$IN_DIR/include/asm-*" ! -path "$IN_DIR/include/asm-i386*" -prune -o \
@@ -18,6 +29,11 @@
 ::	-path "$IN_DIR/drivers*" -prune -o                                          \
 ::    -name "*.[chxsS]"                                                           \
 ::	-print >$OUT_DIR/cscope.files
+IF EXIST %INPUTFILE% (
+    ECHO "%INPUTFILE%" created successfully
+) ELSE (
+    ECHO failed to create "%INPUTFILE%"
+)
 
 ::Usage: cscope [-bcCdehklLqRTuUvV] [-f file] [-F file] [-i file] [-I dir] [-s dir]
 ::              [-p number] [-P path] [-[0-8] pattern] [source files]
@@ -49,27 +65,30 @@
 ::
 ::Please see the manpage for more information.
 
-@ECHO "Creating cscope tags ... "
+@ECHO Creating cscope tags ...
 
 @ECHO OFF
-
-:: Create the new cscope tags file to project root folder:
-IF EXIST cscope.out (
-	ECHO "a"
-    cscope.exe -R -b -q -k -f cscope_new.out
-:: Rename the files to its original: cscope.out, cscope.in.out, cscope.po.out
-    DEL cscope.out
-	IF EXIST cscope.in.out DEL cscope.in.out
-	IF EXIST cscope.po.out DEL cscope.po.out
-	RENAME cscope_new.out     cscope.out
-	RENAME cscope_new.out.in  cscope.in.out
-	RENAME cscope_new.out.po  cscope.po.out
+:: Create the new cscope tags file in project root folder:
+IF EXIST cscope.files ( 
+    ECHO "cscope.files" exists,create tags based on input file
+    cscope.exe -b -q -k -f cscope_new.out
 ) ELSE (
-    cscope.exe -R -b -q -k
-	ECHO "b"
+    ECHO no input file, search recursively within current folder
+    cscope.exe -R -b -q -k -f cscope_new.out
 )
 
-@ECHO "cscope tags created/updated!"
+:: Rename the files to its original: cscope.out, cscope.in.out, cscope.po.out
+IF EXIST cscope.out (
+    @ECHO Cscope tags updated successfully
+    DEL cscope.out
+) ELSE ( 
+    @ECHO Cscope tags created successfully
+)
+IF EXIST cscope.in.out DEL cscope.in.out
+IF EXIST cscope.po.out DEL cscope.po.out
+RENAME cscope_new.out     cscope.out
+RENAME cscope_new.out.in  cscope.in.out
+RENAME cscope_new.out.po  cscope.po.out
 
 ::PAUSE 
 

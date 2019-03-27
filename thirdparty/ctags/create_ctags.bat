@@ -1,11 +1,12 @@
 
-:: The first parameter passed to the batch file(%1) is the project root directory
+:: The first parameter passed to the batch file(%1) is the project root directory(full path)
 :: Enter into project root directory before starting the command
-:: ECHO %CD%
-:: PAUSE
-:: CD %1
+@ECHO OFF
+SET CCWD=%1
+@ECHO Enter into project root directory:  %CCWD%
+CD %CCWD%
 
-@ECHO "Creating ctags ... "
+@ECHO Creating ctags ...
 
 @ECHO OFF
 
@@ -102,15 +103,19 @@ REM Usage: ctags [options] [file(s)]
   REM --version
        REM Print version identifier to standard output.
 
+@ECHO OFF
 
 :: Create the new Ctags file to project root folder(the current folder)
-ctags.exe -R -o tags.new
+ctags.exe --recurse=yes -f tags.new --exclude=.git
 
-:: Repace the tag file with the new tag file
-DEL tags
+:: Repgag file with the new tag file
+IF EXIST tags (
+    DEL tags
+    ECHO Ctags tag file updated successfully
+) ELSE (
+    ECHO Ctags tag file generated successfully
+)
 RENAME tags.new tags
-
-@ECHO "ctags created/updated!"
 
 ::PAUSE 
 

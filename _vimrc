@@ -335,7 +335,8 @@ inoremap <C-U> <C-G>u<C-U>
 " }}} end of Netrw
 
 " ------NERDTree ------- {{{
-let NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
+let g:NERDTreeQuitOnOpen = 1 "automatically close NerdTree when you open a file
+let g:NERDTreeWinPos = "right"
 map <leader>o :NERDTreeFind <cr>   " View the current buffer in NERDTree
 nmap <F10>    :NERDTreeToggle <cr> 
 

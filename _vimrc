@@ -326,6 +326,17 @@ nmap <leader>bw            :bw <CR>         " close the current buffer, buffer i
 " Revert with ":iunmap <C-U>".
 inoremap <C-U> <C-G>u<C-U>
 
+function! AddSearchPath()
+    silent !clear
+	let thiscwd = getcwd()
+    let searchpath=substitute(thiscwd, '\', '/', 'g')
+	let allpath=searchpath."/**"
+	" pass the current working directory as the argument to the option 'path'
+   let &path='.,' . allpath 
+endfunction
+" add the current working directory as search path for 'gf' etc.
+nmap <silent><leader>path         :call AddSearchPath() <CR>
+
 " Plugins {{{
 " ------Netrw ------- {{{
 " Netrw

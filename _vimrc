@@ -257,11 +257,14 @@ set tabstop=4
 set clipboard+=unnamed  " share the default registers with system clipboard
 set noundofile          " no persistent undo file: .un~
 set laststatus=2        " last window always has a status line
+set statusline=%F\ %h%w%m%r\ %=%{getcwd()}\ %=%(%l,%c%V\ %=\ %P%)
 set foldmethod=syntax   " enable foldering by Syntax
 set foldnestmax=20      "
 set nofoldenable        " no fold when open a file
 set foldlevel=10        " 
 set cursorline
+set splitbelow          " new window locates below
+set splitright          " new window locates right 
 
 " foldmethod for vim file is marker
 autocmd FileType vim setlocal foldmethod=marker
